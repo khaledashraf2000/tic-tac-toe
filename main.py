@@ -62,33 +62,32 @@ def main():
         if game_over(x_plays, o_plays):
             running = False
 
-        for event in pygame.event.get():
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if pygame.mouse.get_pressed()[0]:
-                    # if player is X (human)
-                    if player == 1:
+        # if player is X (human)
+        if player == 1:
+            for event in pygame.event.get():
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if pygame.mouse.get_pressed()[0]:
                         (x, y) = pygame.mouse.get_pos()
                         if 0 <= x <= 300 and 0 <= y <= 300:
                             i = get_index_of_grid(x, y)
                             if can_play(x_plays, o_plays, i):
                                 x_plays.add(i)
+                                # switch players
+                                player = (player + 1) % 2
 
-                    # if player is O (computer)
-                    else:
-                        play = Play(x_plays, o_plays)
-                        # searches for child with the value given to itself
-                        for child in play.children:
-                            if child.value == play.value:
-                                # updates global positions of O with new child's positions
-                                o_plays.update(child.o_plays)
-                                break
-
-                # switch player
-                player = (player + 1) % 2
-
-            # quit handling
-            if event.type == pygame.QUIT:
-                running = False
+                # quit handling
+                if event.type == pygame.QUIT:
+                    running = False
+        else:
+            play = Play(x_plays, o_plays)
+            # searches for child with the value given to itself
+            for child in play.children:
+                if child.value == play.value:
+                    # updates global positions of O with new child's positions
+                    o_plays.update(child.o_plays)
+                    break
+            # switch players
+            player = (player + 1) % 2
 
         CLOCK.tick(FPS)
 

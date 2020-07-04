@@ -50,7 +50,7 @@ class Play:
         self.o_plays = o_plays
         self.children = []  # list of Play containing all possible moves
         self.generate_children()
-        self.value = minimax(self.depth(), True if len(x_plays) > len(o_plays) else False, self)
+        self.value = minimax(self.depth(), True, self)
 
     # calculate static value
     # returns -1 if X wins in this play,
@@ -86,6 +86,7 @@ class Play:
                         new_x_plays.add(i)
                         self.children.append(Play(new_x_plays, self.o_plays))
 
+    # maximum depth to search
     def depth(self):
         return 9 - len(self.x_plays) - len(self.o_plays)
 
