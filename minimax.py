@@ -111,5 +111,5 @@ def minimax(depth: int, maximizer: bool, play: Play):
         play.value = float('inf')
         # look for node with smallest value and return it
         for node in play.children:
-            play.value = min(play.value, minimax(depth - 1, False, node))
+            play.value = min(play.value, minimax(depth - 1, True, node))
         return play.value
