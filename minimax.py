@@ -50,7 +50,7 @@ class Play:
         self.o_plays = o_plays
         self.children = []  # list of Play containing all possible moves
         self.generate_children()
-        self.value = minimax(self.depth(), True, self)
+        self.value = minimax(self.depth(), True, float('-inf'), float('inf'), self)
 
     # calculate static value
     # returns -1 if X wins in this play,
@@ -92,7 +92,8 @@ class Play:
 
 
 # Minimax algorithm: minimizing maximum loss.
-def minimax(depth: int, maximizer: bool, play: Play):
+# added alpha-beta pruning to increase efficiency.
+def minimax(depth: int, maximizer: bool, alpha, beta, play: Play):
     # end game or leaf node
     if depth == 0 or game_over(play.x_plays, play.o_plays):
         return play.sv()
@@ -103,7 +104,10 @@ def minimax(depth: int, maximizer: bool, play: Play):
         play.value = float('-inf')
         # look for node with biggest value and return it
         for node in play.children:
-            play.value = max(play.value, minimax(depth - 1, False, node))
+            play.value = max(play.value, minimax(depth - 1, False, alpha, beta, node))
+            alpha = max(alpha, play.value)
+            if beta <= alpha:
+                break
         return play.value
 
     # the minimizer always looks for minimum value between nodes
@@ -112,5 +116,9 @@ def minimax(depth: int, maximizer: bool, play: Play):
         play.value = float('inf')
         # look for node with smallest value and return it
         for node in play.children:
-            play.value = min(play.value, minimax(depth - 1, True, node))
+            play.value = min(play.value, minimax(depth - 1, True, alpha, beta, node))
+            beta = min(beta, play.value)
+            if beta <= alpha:
+                break
+
         return play.value
